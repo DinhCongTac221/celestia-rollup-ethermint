@@ -1,0 +1,11 @@
+# Ignore folders:
+node_modules
+cache
+.openzeppelin
+artifacts
+build
+# Ignore files:
+*.html
+.env
+package-lock.json
+package.json

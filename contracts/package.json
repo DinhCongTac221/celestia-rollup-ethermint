@@ -1,0 +1,47 @@
+{
+    "name": "hardhat-project",
+    "devDependencies": {
+        "@nomiclabs/hardhat-ethers": "^2.0.5",
+        "@nomiclabs/hardhat-waffle": "^2.0.2",
+        "@openzeppelin/hardhat-upgrades": "^1.16.1",
+        "chai": "^4.3.6",
+        "ethereum-waffle": "^3.4.0",
+        "ethers": "^5.6.1",
+        "hardhat": "^2.9.9",
+        "prettier": "^2.6.2",
+        "prettier-plugin-solidity": "^1.0.0-beta.19"
+    },
+    "dependencies": {
+        "@nomiclabs/hardhat-etherscan": "^3.0.1",
+        "@openzeppelin/contracts": "^4.5.0",
+        "@openzeppelin/contracts-upgradeable": "^4.5.2",
+        "@uniswap/v2-core": "^1.0.1",
+        "@uniswap/v2-periphery": "^1.1.0-beta.0",
+        "dotenv": "^16.0.0",
+        "fs": "^0.0.1-security",
+        "path": "^0.12.7",
+        "web3": "^1.7.0"
+    },
+    "description": "Simple ERC20 tokens",
+    "version": "1.0.0",
+    "main": "hardhat.config.js",
+    "scripts": {
+        "format": "prettier --write .",
+        "compile": "hardhat clean && hardhat compile --force",        
+        "deploy_standard_token": "hardhat run --network ethermint scripts/token/deploy_standard_token.js",
+        "verify_standard_token": "hardhat verify --network ethermint CONTRACT_ADDRESS",
+        "deploy_burnable_token": "hardhat run --network ethermint scripts/token/deploy_burnable_token.js",
+        "verify_burnable_token": "hardhat verify --network ethermint CONTRACT_ADDRESS"
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/thinhpn/issues"
+    },
+    "homepage": "https://github.com/thinhpn"
+}
