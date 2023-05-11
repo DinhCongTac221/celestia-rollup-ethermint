@@ -31,7 +31,9 @@
         "deploy_standard_token": "hardhat run --network ethermint scripts/token/deploy_standard_token.js",
         "verify_standard_token": "hardhat verify --network ethermint CONTRACT_ADDRESS",
         "deploy_burnable_token": "hardhat run --network ethermint scripts/token/deploy_burnable_token.js",
-        "verify_burnable_token": "hardhat verify --network ethermint CONTRACT_ADDRESS"
+        "verify_burnable_token": "hardhat verify --network ethermint CONTRACT_ADDRESS",
+        "deploy_multi_send": "hardhat run --network ethermint scripts/utility/deploy_multi_send.js",
+        "verify_multi_send": "hardhat verify --network ethermint CONTRACT_ADDRESS"
     },
     "repository": {
         "type": "git",
