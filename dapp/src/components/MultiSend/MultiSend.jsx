@@ -2,7 +2,7 @@ import React from 'react'
 
 const MultiSend = () => {
   return (
-    <div>MultiSend</div>
+    <div>COMMING SOON</div>
   )
 }
 

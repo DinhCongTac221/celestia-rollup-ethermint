@@ -1,17 +1,17 @@
+import './App.css';
 import { useState, useEffect } from 'react';
 import FaucetPage from './components/Faucet/Faucet';
 import CreateTokenPage from './components/CreateToken/CreateToken';
 import MultiSendPage from './components/MultiSend/MultiSend';
-import './App.css';
-import { toast } from 'react-toastify';
-import { useAccount, useBalance } from "wagmi";
+import { useAccount } from "wagmi";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
+import { ethers } from "ethers";
 
 function App() {
-  const [activeMenu, setActiveMenu] = useState('faucet');   
-  const [showAddEthermintNetwork, setShowAddEthermintNetwork] = useState(true);
+  const [activeMenu, setActiveMenu] = useState('faucet');  
   const { address } = useAccount();
-  const { data } = useBalance({ address: address });
 
   const ETHERMINT_NETWORK = {
     id: 9000,
@@ -32,9 +32,7 @@ function App() {
 
   const addEthermintNetwork = async () => {
     if (!window.ethereum || address === undefined) {
-      toast.error('MetaMask is not installed!', {
-        position: toast.POSITION.TOP_RIGHT,
-      });      
+      toast.error('MetaMask is not installed!');      
       return;
     }    
     try {
@@ -42,13 +40,9 @@ function App() {
         method: "wallet_addEthereumChain",
         params: [ETHERMINT_NETWORK],
       });
-      toast.success('Connect Ethermint Custom Chain Success!', {
-        position: toast.POSITION.TOP_RIGHT,
-      });      
+      toast.success('Connect Ethermint Custom Chain Success!');      
     } catch (error) {
-      toast.error('Cannot connect to Ethermint Custom Chain!', {
-        position: toast.POSITION.TOP_RIGHT,
-      }); 
+      toast.error('Cannot connect to Ethermint Custom Chain!'); 
     }
   };  
 
@@ -57,7 +51,10 @@ function App() {
       case 'faucet':
         return <FaucetPage />;
       case 'createToken':
-        return <CreateTokenPage />;
+        return <CreateTokenPage 
+          provider = {new ethers.providers.Web3Provider(window.ethereum)}
+          ethers = {ethers}      
+        />;
       case 'multiSend':
         return <MultiSendPage />;
       default:
@@ -66,10 +63,6 @@ function App() {
   };
 
   useEffect(() => {    
-    if (window.ethereum === undefined || 
-      parseInt(window.ethereum?.networkVersion) === ETHERMINT_NETWORK.id) {
-        setShowAddEthermintNetwork(false);
-    }
   }, []);
 
 
@@ -96,13 +89,18 @@ function App() {
             <li className="connect-button-container">
               <ConnectButton onClick={addEthermintNetwork} />
             </li>
-          )}
-          {/* <li className="connect-button-container">
-            <ConnectButton />
-          </li>                  */}
+          )}          
         </ul>
       </nav>
       <div className="content">{renderContent()}</div>
+      <div>
+        <p className='copyright'>
+          Copyright by 
+          <a href='https://github.com/thinhpn' target='_blank' rel='noopener noreferrer'> allinlink#6932</a><br/>
+          Made for Celestia Network with love!
+        </p>
+      </div>
+      <ToastContainer />
     </div>
   );
 }

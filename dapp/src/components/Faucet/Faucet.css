@@ -5,6 +5,12 @@
   align-items: center;
 }
 
+.faucet-container h2 {
+  color: #007bff;
+  font-size: 21px;
+  margin-bottom: 20px;
+}
+
 .wallet-input {
   width: 400px;
   height: 20px; /* Thay đổi chiều cao thành giá trị mong muốn */
@@ -20,6 +26,7 @@
   background-color: #4caf50;
   color: white;
   border: none;
+  font-size: 18px;
   border-radius: 5px;
   cursor: pointer;
 }

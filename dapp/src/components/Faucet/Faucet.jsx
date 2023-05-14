@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './Faucet.css';
 import { ethers } from 'ethers';
+import { toast } from 'react-toastify';
 
 function FaucetPage() {
   const [walletAddress, setWalletAddress] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');  
+  const [loading, setLoading] = useState(false); 
 
   const handleRequest = async () => {
     setLoading(true);    
@@ -17,35 +17,26 @@ function FaucetPage() {
           body: JSON.stringify({ walletAddress }),
         });
         if (response.ok) {
-          setToastMessage('Faucet Successfully');
+          toast.success('Faucet Successfully');
         } else {
-          setToastMessage('Faucet Fail! Please try again later!');
+          toast.error('Faucet Fail! Please try again later!');          
         }
       }
       else {
-        setToastMessage('Your wallet address is invalid!');
+        toast.error('Your wallet address is invalid!');
       }      
     } catch (error) {
-      setToastMessage('Faucet Fail! Please try again later!');
+      toast.error('Faucet Fail! Please try again later!');
     }
     setLoading(false);
-  };
-
-  useEffect(() => {
-    if (toastMessage) {
-      const timer = setTimeout(() => {
-        setToastMessage('');
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [toastMessage]);
+  };  
 
   return (
     <div className="faucet-container">
       <h2>Enter your ethermint wallet to get free 5 ETH Testnet
         <br />
-        and create your own token</h2>
+        and create your own token
+      </h2>
       <input
         className="wallet-input"
         type="text"
@@ -56,8 +47,7 @@ function FaucetPage() {
       <button className="request-button" onClick={handleRequest} disabled={loading}>
         Request
       </button>
-      {loading && <div className="loading">Loading...</div>}
-      {toastMessage && <div className={`toast ${toastMessage.includes('Fail') ? 'error' : toastMessage.includes('invalid') ? 'invalid' : 'success'}`}>{toastMessage}</div>}
+      {loading && <div className="loading">Loading...</div>}     
     </div>
   );
 }
