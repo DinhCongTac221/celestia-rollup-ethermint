@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import FaucetPage from './components/Faucet/Faucet';
+import CreateTokenPage from './components/CreateToken/CreateToken';
+import MultiSendPage from './components/MultiSend/MultiSend';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeMenu, setActiveMenu] = useState('faucet');
+
+  const renderContent = () => {
+    switch (activeMenu) {
+      case 'faucet':
+        return <FaucetPage />;
+      case 'createToken':
+        return <CreateTokenPage />;
+      case 'multiSend':
+        return <MultiSendPage />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <nav className="menu">
+        <ul>
+          <li>
+            <button className={activeMenu === 'faucet' ? 'active' : ''} onClick={() => setActiveMenu('faucet')}>
+              Faucet
+            </button>
+          </li>
+          <li>
+            <button className={activeMenu === 'createToken' ? 'active' : ''} onClick={() => setActiveMenu('createToken')}>
+              Create Your Own Token
+            </button>
+          </li>
+          <li>
+            <button className={activeMenu === 'multiSend' ? 'active' : ''} onClick={() => setActiveMenu('multiSend')}>
+              MultiSend Any Token
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <div className="content">{renderContent()}</div>
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,47 @@
+.faucet-container {
+    text-align: center;
+  }
+  
+  .wallet-input {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .request-button {
+    padding: 10px 10px;
+    margin-left: 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .request-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .loading {
+    margin-top: 10px;
+  }
+  
+  .toast {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .toast.success {
+    background-color: #4caf50;
+  }
+  
+  .toast.error {
+    background-color: #f44336;
+  }
+  
+  
