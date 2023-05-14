@@ -8,7 +8,7 @@
 }
 
 .menu {
-  background-color: #f2f2f2;
+  background-color: #fff;
   padding: 10px;
   border-radius: 2px;
   margin-bottom: 20px;
@@ -33,12 +33,18 @@
 .menu button {
   border: none;
   background-color: transparent;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
+}
+
+.menu button:focus {
+  outline: none;
 }
 
 .menu button.active {
   font-weight: bold;
+  color: red;
+  outline: none;
 }
 
 .content {
@@ -50,5 +56,12 @@
   background-color: #f9f9f9;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.connect-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 20px;
 }
 

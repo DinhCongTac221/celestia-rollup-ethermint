@@ -1,22 +1,29 @@
 .faucet-container {
-    text-align: center;
-  }
-  
-  .wallet-input {
-    width: 300px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .request-button {
-    padding: 10px 10px;
-    margin-left: 20px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wallet-input {
+  width: 400px;
+  height: 20px; /* Thay đổi chiều cao thành giá trị mong muốn */
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.request-button {
+  padding: 10px 20px; /* Thay đổi giá trị để tạo cùng chiều cao với .wallet-input */
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
   
   .request-button:disabled {
     background-color: #ccc;
@@ -29,8 +36,7 @@
   
   .toast {
     padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
+    border-radius: 3px;    
     color: #fff;
     font-weight: bold;
     text-align: center;
@@ -42,6 +48,10 @@
   
   .toast.error {
     background-color: #f44336;
+  }
+
+  .toast.invalid {
+    background-color: #007bff;
   }
   
   
