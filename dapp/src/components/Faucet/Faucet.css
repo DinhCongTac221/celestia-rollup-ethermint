@@ -15,6 +15,7 @@
   width: 400px;
   height: 20px; /* Thay đổi chiều cao thành giá trị mong muốn */
   padding: 10px;
+  margin-top: 10px;
   margin-bottom: 10px;
   font-size: 16px;
 }

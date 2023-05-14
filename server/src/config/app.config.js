@@ -13,9 +13,6 @@ config.ethermint = {
     faucetPrivateKey: process.env.PRIVATE_KEY_FAUCET_WALLET
 }
 
-config.redis = {
-    host: process.env.REDIS_CONFIG_HOST,
-    port: process.env.REDIS_CONFIG_PORT,
-};
+config.redis = process.env.REDIS_QUEUE;
 
 module.exports = config;

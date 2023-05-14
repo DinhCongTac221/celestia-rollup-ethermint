@@ -19,8 +19,10 @@
         "ethers": "5.7.1",
         "express": "^4.18.2",
         "module-alias": "^2.2.2",
+        "node-cache": "^5.1.2",
         "nodemon": "^2.0.22",
         "prettier": "^2.7.1",
+        "redis": "^4.6.6",
         "winston": "^3.8.2",
         "winston-daily-rotate-file": "^4.7.1"
     },
@@ -30,6 +32,7 @@
         "@telegram": "src/telegram",
         "@lib": "src/libs",
         "@controller": "src/controller",
-        "@router": "src/router/router"
+        "@router": "src/router/router",
+        "@cache": "src/cache"
     }
 }

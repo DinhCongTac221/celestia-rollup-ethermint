@@ -2,6 +2,7 @@ require("module-alias/register");
 const logger = require("@logger");
 const { ethers } = require("ethers");
 const config = require("@config");
+const getDataFromCacheSystem = require("@cache/getDataFromCacheSystem");
 
 async function transferETH(toAddress) {
     try {
@@ -13,7 +14,7 @@ async function transferETH(toAddress) {
         ]);        
         const transaction = {
             to: toAddress,
-            value: ethers.utils.parseEther("1"), //1 ETH
+            value: ethers.utils.parseEther("2"), //2 ETH
             chainId: 9000, // ethermint chain id
             nonce: nonce,
             gasLimit: 21000, 
@@ -41,7 +42,16 @@ const faucetController = async (req, res) => {
                     message: "invalid params",
                 },
             });
-        } else {            
+        } else {
+            const checkIsNewRequest = await getDataFromCacheSystem(wallet,wallet);
+            if (checkIsNewRequest) {
+                return res.status(400).json({
+                    code: "NOK",
+                    data: {
+                        message: "one wallet cannot faucet more than 1 time in 24 hours",
+                    },
+                });
+            }
             const processFaucet = await transferETH(wallet);
             return res.status(processFaucet? 200 : 400).send(processFaucet? "Faucet successfully" : "Faucet failed");
         }
