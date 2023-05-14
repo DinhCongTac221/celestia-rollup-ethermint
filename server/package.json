@@ -6,40 +6,28 @@
     "scripts": {
         "format": "prettier --write .",
         "dev": "nodemon src/app.js",
-        "app": "node src/app.js",
-        "cron": "node src/cron.js",
-        "queue": "node src/queue.js"
+        "app": "node src/app.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
         "axios": "^0.27.2",
-        "bull": "^4.9.0",
         "cors": "^2.8.5",
         "cron": "^2.1.0",
         "dayjs": "^1.11.5",
         "dotenv": "^16.0.1",
+        "ethers": "5.7.1",
         "express": "^4.18.2",
-        "js-sha256": "^0.9.0",
         "module-alias": "^2.2.2",
-        "mysql2": "^3.2.0",
         "nodemon": "^2.0.22",
-        "path": "^0.12.7",
         "prettier": "^2.7.1",
-        "sequelize": "^6.30.0",
-        "sequelize-auto": "^0.8.8",
         "winston": "^3.8.2",
         "winston-daily-rotate-file": "^4.7.1"
     },
     "_moduleAliases": {
-        "@blockchain": "src/blockchain",
         "@config": "src/config/app.config",
-        "@cron": "src/cron",
-        "@mysql": "src/database",
         "@logger": "src/logger/logger",
-        "@queue": "src/queue",
         "@telegram": "src/telegram",
-        "@service": "src/service",
         "@lib": "src/libs",
         "@controller": "src/controller",
         "@router": "src/router/router"

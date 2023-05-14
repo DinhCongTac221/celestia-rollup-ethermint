@@ -3,12 +3,10 @@ pragma solidity 0.8.8;
 
 interface IERC20 {
     function transferFrom(address from, address to, uint256 value) external returns (bool);
-
     function balanceOf(address account) external view returns (uint256);
 }
 
-contract MultiSend {
-    constructor() {}
+contract MultiSend {    
 
     function multiSendFlexibleAmount(
         IERC20 token,

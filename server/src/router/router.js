@@ -1,17 +1,11 @@
 require("module-alias/register");
 const router = require("express").Router();
-const healthController = require("@controller/health");
-const transactionsController = require("@controller/transactions");
-const pfbController = require("@controller/pfb");
+const faucetController = require("@controller/faucet");
 const balanceController = require("@controller/balance");
-const genCommandPfbController = require("@controller/genCommandPfb");
-const namespacedSharesController = require("@controller/namespacedShares");
+const balanceFaucetController = require("@controller/balanceFaucet");
 
-router.get("/health", healthController);
-router.get("/transactions", transactionsController);
+router.post("/faucet", faucetController);
 router.get("/balance", balanceController);
-router.post("/create/pfb", pfbController);
-router.post("/generate/pfb", genCommandPfbController);
-router.get("/namespaced-shares", namespacedSharesController);
+router.get("/check-balance-faucet", balanceFaucetController);
 
 module.exports = router;
