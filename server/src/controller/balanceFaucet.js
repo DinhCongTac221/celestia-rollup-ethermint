@@ -12,7 +12,7 @@ async function getBalanceFaucet() {
 const balanceFaucetController = async (req, res) => {
     try {
         const balance = await getBalanceFaucet();
-        return res.status(200).send(balance);
+        return res.status(200).send(Math.round(balance));
     } catch (exception) {
         logger.warn(`balanceFaucetController got exception:${exception}`);
         return res.status(500).json("system fail");
