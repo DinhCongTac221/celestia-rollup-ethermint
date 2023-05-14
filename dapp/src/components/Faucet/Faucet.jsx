@@ -43,18 +43,21 @@ function FaucetPage() {
             method: "POST",
             url: `${VITE_API_DOMAIN}/faucet`,
             data: bodyData,
-        });        
+        });             
         if (sendFaucetRequest.status === 200) {
           toast.success('Faucet Successfully. Please check your wallet balance!');
-        } else {
-          toast.error('Faucet Fail! Please try again later!');          
-        } 
+        }         
       }       
       else {
         toast.error('Your wallet address is invalid!');
       }      
     } catch (error) {
-      toast.error('Faucet Fail! Please try again later!');
+      console.log(error);
+      if (error.response && error.response.status === 400) {              
+        toast.error(error.response.data.data.message)
+      } else {
+        toast.error('Faucet Fail! Please try again later!');
+      }      
     }
     setLoading(false);
   };  
