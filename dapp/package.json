@@ -21,7 +21,7 @@
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.7",
     "react-toastify": "^9.1.2",
-    "wagmi": "^0.8.10"
+    "wagmi": "0.8.10"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

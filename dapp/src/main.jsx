@@ -4,12 +4,7 @@ import App from './App'
 import './index.css'
 import '@rainbow-me/rainbowkit/styles.css';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { 
-  chain, 
-  configureChains,
-  createClient,
-  WagmiConfig,
-} from 'wagmi';
+import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { injectedWallet, metaMaskWallet } from '@rainbow-me/rainbowkit/wallets';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';

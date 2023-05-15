@@ -12,11 +12,17 @@ Let's begin!
 I will detail everything.
 
 ## 1. Install Ethermint
-Here is a relatively easy process. First, you need to install a Celestia node, and the light node is the simplest option. After that, oh, we just need to install Ethermint on it. Take a look at my script; it's an all-in-one script. You just need to download it, upload it to your server, give execution permissions(chmod 777), and then run it.
+Here is a relatively easy process. First, you need to install a Celestia node, and the light node is the simplest option. After that, oh, we just need to install Ethermint on it. Take a look at my script; it's an all-in-one script. You just need to download it, upload it to your server, give execution permissions, and then run it.
 The script is relatively straightforward, so I won't explain anything further.
 
 After deploying the Ethermint network, we will have an **RPC endpoint** to interact with the network, usually available at the address **http://localhost:8545** by default. If you intend to use this RPC endpoint, it's recommended to have a domain name and set up DNS resolution to point to the server running the Ethermint node on port 8545.
 Here's an example of my domain (feel free to use it if you wish): *https://celestia-rpc-ethermint.thinhpn.com*.
+
+Deployment steps:
+
+ - Download /ethermint/ethermint_rollup_one_script.sh & save to your server
+ - `chmod +x ./ethermint_rollup_one_script.sh`
+ - `./ethermint_rollup_one_script.sh`
 
 ## 2. Write Contracts
 The question is, why do we need to write smart contracts? Well, as we discussed earlier, we have deployed the Ethermint Rollup network on top of Celestia. So, we need to write smart contracts to create DApps on the Ethermint network and leverage this infrastructure. I won't go into too much detail about smart contracts here, as you can find plenty of resources online. I'll just use a few simple examples, such as a pure ERC20 token or a contract that allows sending to multiple different wallets in a single transaction (multisend).
@@ -47,7 +53,7 @@ Note the parameters required to run the server:
 
  - PORT_APP: Replace with your desired port.
  - FAUCET_WALLET: Replace with the deployed wallet address on the Ethermint network.
- - PRIVATE_KEY_FAUCET_WALLET: Run the command ethermintd q auth account $(ethermintd keys show mykey -a) -o text on your node to get the private key of the faucet wallet.
+ - PRIVATE_KEY_FAUCET_WALLET: Run the command ethermintd q auth account `$(ethermintd keys show mykey -a) -o text` on your node to get the private key of the faucet wallet.
  - RPC_URL: The RPC URL of the deployed Ethermint network from Step 1. By default, it is http://localhost:8545.
 Deployment steps:
 
