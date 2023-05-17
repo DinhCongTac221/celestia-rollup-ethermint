@@ -22,11 +22,12 @@ async function transferETH(toAddress) {
         };  
         const signedTransaction = await wallet.signTransaction(transaction);
         const transactionResponse = await provider.sendTransaction(signedTransaction);  
-        console.log("Faucet successfully!");
+        logger.info("Faucet successfully!");
         logger.info(JSON.stringify(transactionResponse, null, 4));
         return true;
     } catch (error) {
         console.log(error);
+        logger.warn(error);
         return false;
     }    
   }
