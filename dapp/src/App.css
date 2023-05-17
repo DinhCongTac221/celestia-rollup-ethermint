@@ -27,7 +27,7 @@
 
 .menu li {
   display: inline-block;
-  margin-right: 10px;
+  margin-right: 10px;  
 }
 
 .menu button {
@@ -35,6 +35,7 @@
   background-color: transparent;
   font-size: 18px;
   cursor: pointer;
+  color: black;
 }
 
 .menu button:focus {

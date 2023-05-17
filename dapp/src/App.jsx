@@ -56,7 +56,10 @@ function App() {
           ethers = {ethers}      
         />;
       case 'multiSend':
-        return <MultiSendPage />;
+        return <MultiSendPage 
+          provider = {new ethers.providers.Web3Provider(window.ethereum)}
+          ethers = {ethers} 
+        />;
       default:
         return null;
     }

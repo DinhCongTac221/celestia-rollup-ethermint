@@ -5,7 +5,7 @@ const config = require("@config");
 
 async function getBalance(walletAddress) {    
     const provider = new ethers.providers.JsonRpcProvider(config.ethermint.rpc);    
-    const balance = await provider.getBalance(walletAddress);    
+    const balance = await provider.getBalance(walletAddress);
     return ethers.utils.formatEther(balance);
 }
 
