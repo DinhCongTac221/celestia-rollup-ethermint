@@ -36,7 +36,7 @@ function MultiSend(props) {
   async function checkTokenContractValid(ethers, signer, abi, token_address) {
     try {
       // eslint-disable-next-line react/prop-types
-      if(ethers.utils.isAddress(token_address)){
+      if(ethers.utils.isAddress(token_address)) {
         const tokenContract = new ethers.Contract(token_address, abi, signer);          
         const [name, symbol, supply, decimals] = await Promise.all([
           tokenContract.name(),
@@ -57,7 +57,7 @@ function MultiSend(props) {
         return false;   
     } catch (error) {
       console.log(error);
-      return false;
+      toast.error('Please connect wallet to ethermint network first!');      
     }
   }
   
@@ -87,7 +87,7 @@ function MultiSend(props) {
         setTotalSpentAmount(spentAmount);
         return true;   
     } catch (error) {
-      console.log(error);
+      console.log(error);      
       return false;
     }
   }
@@ -109,26 +109,31 @@ function MultiSend(props) {
 
   const preparingMultisendProgress = async () => {
     setIsChecking(true);
-    const signer = provider.getSigner();
-    const isTokenContract = await checkTokenContractValid(
-        ethers, signer, StandardTokenContract.abi, tokenAddress);      
-    if(isTokenContract) {
-      if(checkValidAddressesAndAmount(ethers, addresesWithAmounts)) {  
-        setIsChecking(false);      
-        setShowPopup(true);        
-        return;
+    try {
+      const signer = provider.getSigner();
+      const isTokenContract = await checkTokenContractValid(
+          ethers, signer, StandardTokenContract.abi, tokenAddress);      
+      if(isTokenContract) {
+        if(checkValidAddressesAndAmount(ethers, addresesWithAmounts)) {  
+          setIsChecking(false);      
+          setShowPopup(true);        
+          return;
+        }
+        else {
+          setIsChecking(false);
+          toast.error('Invalid addresses-amounts!');
+          return;
+        }      
       }
       else {
         setIsChecking(false);
-        toast.error('Invalid addresses-amounts!');        
+        toast.error('Invalid token address');      
         return;
-      }      
+      }       
+    } catch (error) {
+      console.log(error);      
     }
-    else {
-      setIsChecking(false);
-      toast.error('Invalid token address');      
-      return;
-    }       
+    
   };
 
 const sendMultiReceiversWithAmount = async () => {
@@ -140,7 +145,8 @@ const sendMultiReceiversWithAmount = async () => {
     import.meta.env.VITE_MULTISEND_CONTRACT, 
     tokenAddress, addresses, amounts
   );
-  setIsLoading(false);    
+  setIsLoading(false); 
+  resetMultisendPanel(); 
 };
 
   return (
