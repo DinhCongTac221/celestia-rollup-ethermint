@@ -4,6 +4,8 @@ pragma solidity 0.8.8;
 interface IERC20 {
     function transferFrom(address from, address to, uint256 value) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
+    function allowance(address owner, address spender) external view returns (uint256);
+    function approve(address spender, uint256 amount) external view returns (bool);
 }
 
 contract MultiSend {    
@@ -15,13 +17,23 @@ contract MultiSend {
     ) public {
         require(to.length == amounts.length, "Invalid input lengths");
         require(token.balanceOf(msg.sender) >= getTotalAmount(amounts), "Insufficient balance");
+        uint256 currentAllowance = token.allowance(msg.sender, address(this));
+        uint256 totalSpentAmount = getTotalAmount(amounts);
+        if(currentAllowance < totalSpentAmount) {
+            require(token.approve(address(this), (totalSpentAmount - currentAllowance)), "Approve failed");
+        }        
         for (uint256 i = 0; i < to.length; i++) {
             require(token.transferFrom(msg.sender, to[i], amounts[i]), "Transfer failed");
         }
     }
 
     function multiSendFixedAmount(IERC20 token, address[] memory to, uint256 amount) public {
-        require(token.balanceOf(msg.sender) >= amount, "Insufficient balance");
+        require(token.balanceOf(msg.sender) >= amount * (to.length), "Insufficient balance");
+        uint256 currentAllowance = token.allowance(msg.sender, address(this));
+        uint256 totalSpentAmount = amount * (to.length);
+        if(currentAllowance < totalSpentAmount) {
+            require(token.approve(address(this), (totalSpentAmount - currentAllowance)), "Approve failed");
+        }        
         for (uint256 i = 0; i < to.length; i++) {
             require(token.transferFrom(msg.sender, to[i], amount), "Transfer failed");
         }
