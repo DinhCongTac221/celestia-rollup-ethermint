@@ -10,7 +10,8 @@ function MultiSend(props) {
   // eslint-disable-next-line react/prop-types
   const { provider, ethers } = props;
 
-  const [tokenAddress, setTokenAddress] = useState('0x8a10a139D2717CE8882d99E5D9FeDA0F6129dD11');
+  // const [tokenAddress, setTokenAddress] = useState('0x8a10a139D2717CE8882d99E5D9FeDA0F6129dD11');
+  const [tokenAddress, setTokenAddress] = useState('');
   const [addresesWithAmounts, setAddresesWithAmounts] = useState('');  
   const [isSending, setIsSending] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
