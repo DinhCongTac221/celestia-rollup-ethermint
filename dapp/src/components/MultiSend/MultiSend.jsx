@@ -231,7 +231,7 @@ function MultiSend(props) {
         type="text"
         value={tokenAddress}
         onChange={(e) => setTokenAddress(e.target.value)}
-        placeholder="Enter your token addres here"/>
+        placeholder="Enter your token address here"/>
       {tokenName && tokenSymbol && tokenSupply > 0 && 
         <label className="label-valid-token">Token valid with name={tokenName}, symbol={tokenSymbol} & supply={tokenSupply}</label>}      
       <label className="label">Addresses with Amounts:</label>
