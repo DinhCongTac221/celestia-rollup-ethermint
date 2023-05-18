@@ -140,6 +140,11 @@
   animation: spin 1s ease-in-out infinite;
 }
 
+.multiline-text {  
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 
 @keyframes spin {
   0% {

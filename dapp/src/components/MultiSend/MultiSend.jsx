@@ -59,10 +59,10 @@ function MultiSend(props) {
         convertAmounts.push(convertToDecimal(amounts[index], tokenDecimal));
       }      
       const multisendContract = new ethers.Contract(contract_address, abi, signer);
-      const tokenContract = new ethers.Contract(token_address, StandardTokenContract.abi, signer);      
-      if(allowance < totalSpentAmount) {        
+      const tokenContract = new ethers.Contract(token_address, StandardTokenContract.abi, signer);
+      if(allowance <= totalSpentAmount) {        
         const needApprove = await tokenContract.approve(MULTISEND_CONTRACT, convertToDecimal(totalSpentAmount, tokenDecimal));
-        if(needApprove) {
+        if(needApprove?.hash) {
           const sending = await multisendContract.multiSendFlexibleAmount(token_address, toAddresses, convertAmounts);
           if(sending.hash) {            
             setTransactionHash(sending.hash);            
@@ -71,9 +71,13 @@ function MultiSend(props) {
             return true;
           }
         }
+        else {
+          toast.success('Error approve token!');               
+          return false;
+        }
       }
       else {
-        const sending = await multisendContract.multiSendFlexibleAmount(token_address, toAddresses, amounts); 
+        const sending = await multisendContract.multiSendFlexibleAmount(token_address, toAddresses, convertAmounts); 
         if(sending.hash) {          
           setTransactionHash(sending.hash);          
           toast.success('Multisend token success!');
@@ -101,7 +105,7 @@ function MultiSend(props) {
           tokenContract.balanceOf(sender),
           tokenContract.allowance(sender, MULTISEND_CONTRACT),
         ]);        
-        if(name && symbol && +supply > 0) {          
+        if(name && symbol && +supply > 0 && decimals > 0 && balance && allowance) {          
           setTokenName(name);
           setTokenSymbol(symbol);
           setTokenSupply(Math.round(ethers.utils.formatUnits(supply, decimals)));
@@ -144,11 +148,7 @@ function MultiSend(props) {
         }        
         setAddresses(wallets);
         setAmounts(numbers);
-        setTotalSpentAmount(spentAmount);        
-        if(userBalance < spentAmount) {
-          toast.error(`Insufficient balance to perform the transfer. Please check your token balance again!`);
-          return false;
-        }        
+        setTotalSpentAmount(spentAmount);               
         return true;   
     } catch (error) {
       console.log(error);      
@@ -185,14 +185,14 @@ function MultiSend(props) {
       const isTokenContract = await checkTokenContractValid(
           ethers, signer, StandardTokenContract.abi, tokenAddress);      
       if(isTokenContract) {
-        if(checkValidAddressesAndAmount(ethers, addresesWithAmounts)) {  
+        const isValidAddressAndAmount = checkValidAddressesAndAmount(ethers, addresesWithAmounts);
+        if(isValidAddressAndAmount) {  
           setIsChecking(false);      
           setShowPopup(true);        
           return;
         }
         else {
-          setIsChecking(false);
-          // toast.error('Invalid addresses-amounts!');
+          setIsChecking(false);          
           return;
         }      
       }
@@ -210,6 +210,10 @@ function MultiSend(props) {
   const sendMultiReceiversWithAmount = async () => {
     setShowPopup(false); 
     setIsSending(true);
+    if(userBalance < totalSpentAmount) {
+      toast.error(`Insufficient balance to perform the transfer. Please check your token balance!`);
+      return false;
+    } 
     const signer = provider.getSigner();
     await executingMultisend(
       ethers, signer, MultiSendContract.abi, 
@@ -253,13 +257,13 @@ function MultiSend(props) {
       <button 
         className="request-button"
         onClick={preparingMultisendProgress}>
-          Next Step
+          Processing
       </button>
       {showPopup && (
                 <div className="popup">
                     <div className="popup-content">
                         <h2>Confirmation</h2>
-                        <p> Everything looks good! Do you want to confirm that a total of {totalSpentAmount} token {tokenSymbol} will be transferred to {addresses.length} addresses?
+                        <p className="multiline-text"> Everything looks good! Do you want to confirm that a total of {totalSpentAmount} token {tokenSymbol} will be transferred to {addresses.length} addresses?
                         </p>
                         <div className="button-container">
                             <button onClick={removePopup}>Cancel</button>
@@ -272,7 +276,7 @@ function MultiSend(props) {
                 <div className="popup">
                     <div className="popup-content">
                         <h2>Success</h2>
-                        <p> Your multi-send request has been successfully executed with the transaction hash={transactionHash}
+                        <p className="multiline-text"> Your multi-send request has been successfully executed with the transaction hash={transactionHash}
                         </p>
                         <div className="button-container">                            
                             <button onClick={copyHashToClipboard}>{copyTransactionHash ? "Copied!" : "Copy tx-hash"}</button>

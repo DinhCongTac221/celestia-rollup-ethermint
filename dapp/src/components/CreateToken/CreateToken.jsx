@@ -126,7 +126,7 @@ const deployTokenContract = async () => {
           type="text"
           value={nameToken}
           onChange={(e) => setNameToken(e.target.value)}
-          placeholder="text"/>
+          placeholder="Enter your name"/>
       </div>
       <div className="input-group">
         <label htmlFor="coinSymbol" className="label-left">Symbol of token:</label>
@@ -135,7 +135,7 @@ const deployTokenContract = async () => {
           type="text"
           value={symbolToken}
           onChange={(e) => setSymbolToken(e.target.value)}
-          placeholder="text"/>        
+          placeholder="Enter your symbol"/>        
       </div>
       <div className="input-group">
         <label htmlFor="coinSupply" className="label-left">Total Supply of token:</label>
