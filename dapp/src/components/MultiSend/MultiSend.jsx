@@ -10,23 +10,76 @@ function MultiSend(props) {
   // eslint-disable-next-line react/prop-types
   const { provider, ethers } = props;
 
-  const [tokenAddress, setTokenAddress] = useState('0x1dDdB8Cfe8D964D6fA871CD748Aa3b5a58196f21');
+  const [tokenAddress, setTokenAddress] = useState('0x8a10a139D2717CE8882d99E5D9FeDA0F6129dD11');
   const [addresesWithAmounts, setAddresesWithAmounts] = useState('');  
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [showPopup, setShowPopup] = useState(false); 
+  const [showPopupSendSuccess, setShowPopupSendSuccess] = useState(false); 
   const [addresses, setAddresses] = useState([]);
   const [amounts, setAmounts] = useState([]);
   const [tokenName, setTokenName] = useState('');
   const [tokenSymbol, setTokenSymbol] = useState('');
   const [tokenSupply, setTokenSupply] = useState(0);
+  const [tokenDecimal, setTokenDecimal] = useState(0);
+  const [userBalance, setUserBalance] = useState(0);
   const [totalSpentAmount, setTotalSpentAmount] = useState(0);
+  const [allowance, setAllowance] = useState(0);
+  const [copyTransactionHash, setCopyTransactionHash] = useState(false);
+  const [transactionHash, setTransactionHash] = useState('');
 
-  //ADDITION FUNCTIONS
+  const MULTISEND_CONTRACT = import.meta.env.VITE_MULTISEND_CONTRACT;
+
+  //HELPER FUNCTIONS
+
+  function convertToDecimal(number, decimal) {
+    if(isNaN(number) || isNaN(decimal))
+      return null;
+    let stringDecimal = "";
+    for (let index = 0; index < decimal; index++) {
+      stringDecimal += "0";      
+    }
+    return String(number) + String(stringDecimal);
+  }
+
+  async function copyHashToClipboard() {
+    try {
+      await navigator.clipboard.writeText(transactionHash);
+      setCopyTransactionHash(true);      
+    } catch (err) {
+        console.error("Failed to copy: ", err);
+    }
+  }
+
   async function executingMultisend(ethers, signer, abi, contract_address, token_address, toAddresses, amounts) {
     try {
-      toast.success('Multisend token success!');
-      return true;
+      let convertAmounts = [];
+      for (let index = 0; index < amounts.length; index++) {
+        convertAmounts.push(convertToDecimal(amounts[index], tokenDecimal));
+      }      
+      const multisendContract = new ethers.Contract(contract_address, abi, signer);
+      const tokenContract = new ethers.Contract(token_address, StandardTokenContract.abi, signer);      
+      if(allowance < totalSpentAmount) {        
+        const needApprove = await tokenContract.approve(MULTISEND_CONTRACT, convertToDecimal(totalSpentAmount, tokenDecimal));
+        if(needApprove) {
+          const sending = await multisendContract.multiSendFlexibleAmount(token_address, toAddresses, convertAmounts);
+          if(sending.hash) {            
+            setTransactionHash(sending.hash);            
+            toast.success('Multisend token success!');
+            setShowPopupSendSuccess(true);            
+            return true;
+          }
+        }
+      }
+      else {
+        const sending = await multisendContract.multiSendFlexibleAmount(token_address, toAddresses, amounts); 
+        if(sending.hash) {          
+          setTransactionHash(sending.hash);          
+          toast.success('Multisend token success!');
+          setShowPopupSendSuccess(true);          
+          return true;
+        }
+      }
     } catch (error) {    
       toast.error('Error sending token!');
       return false;
@@ -37,17 +90,23 @@ function MultiSend(props) {
     try {
       // eslint-disable-next-line react/prop-types
       if(ethers.utils.isAddress(token_address)) {
-        const tokenContract = new ethers.Contract(token_address, abi, signer);          
-        const [name, symbol, supply, decimals] = await Promise.all([
+        const tokenContract = new ethers.Contract(token_address, abi, signer);
+        const sender = signer.getAddress();
+        const [name, symbol, supply, decimals, balance, allowance] = await Promise.all([
           tokenContract.name(),
           tokenContract.symbol(),
           tokenContract.totalSupply(),
-          tokenContract.decimals()
-        ]);  
+          tokenContract.decimals(),
+          tokenContract.balanceOf(sender),
+          tokenContract.allowance(sender, MULTISEND_CONTRACT),
+        ]);        
         if(name && symbol && +supply > 0) {          
           setTokenName(name);
           setTokenSymbol(symbol);
           setTokenSupply(Math.round(ethers.utils.formatUnits(supply, decimals)));
+          setTokenDecimal(decimals);
+          setUserBalance(Math.round(ethers.utils.formatUnits(balance, decimals)));
+          setAllowance(Math.round(ethers.utils.formatUnits(allowance, decimals)));
           return true;
         }          
         else
@@ -84,7 +143,11 @@ function MultiSend(props) {
         }        
         setAddresses(wallets);
         setAmounts(numbers);
-        setTotalSpentAmount(spentAmount);
+        setTotalSpentAmount(spentAmount);        
+        if(userBalance < spentAmount) {
+          toast.error(`Insufficient balance to perform the transfer. Please check your token balance again!`);
+          return false;
+        }        
         return true;   
     } catch (error) {
       console.log(error);      
@@ -92,10 +155,14 @@ function MultiSend(props) {
     }
   }
 
-  //MAIN FUNC
+  //MAIN FUNCTIONS
 
   const removePopup = () => {
     setShowPopup(false);
+  };
+
+  const removePopupSendSuccess = () => {
+    setShowPopupSendSuccess(false);
   };
   
   const resetMultisendPanel = () => {
@@ -104,7 +171,10 @@ function MultiSend(props) {
     setTokenName('');
     setTokenSymbol('');
     setTokenSupply(0);
+    setTokenDecimal(0);
     setTotalSpentAmount(0);
+    setAllowance(0);    
+    setCopyTransactionHash(false);  
   };  
 
   const preparingMultisendProgress = async () => {
@@ -121,7 +191,7 @@ function MultiSend(props) {
         }
         else {
           setIsChecking(false);
-          toast.error('Invalid addresses-amounts!');
+          // toast.error('Invalid addresses-amounts!');
           return;
         }      
       }
@@ -136,22 +206,21 @@ function MultiSend(props) {
     
   };
 
-const sendMultiReceiversWithAmount = async () => {
-  setShowPopup(false); 
-  setIsLoading(true);
-  const signer = provider.getSigner();
-  await executingMultisend(
-    ethers, signer, MultiSendContract.abi, 
-    import.meta.env.VITE_MULTISEND_CONTRACT, 
-    tokenAddress, addresses, amounts
-  );
-  setIsLoading(false); 
-  resetMultisendPanel(); 
-};
+  const sendMultiReceiversWithAmount = async () => {
+    setShowPopup(false); 
+    setIsSending(true);
+    const signer = provider.getSigner();
+    await executingMultisend(
+      ethers, signer, MultiSendContract.abi, 
+      MULTISEND_CONTRACT, tokenAddress, addresses, amounts
+    );
+    setIsSending(false); 
+    resetMultisendPanel(); 
+  };
 
   return (
     <div className="multisend-token-container">
-      {isLoading && <div className="loading">Sending...</div>}
+      {isSending && <div className="loading">Sending...</div>}
       {isChecking && <div className="loading">Checking...</div>}
       <h2>Token MultiSender Tool</h2>
       <hr style={{ marginBottom: 0 }} />
@@ -197,7 +266,20 @@ const sendMultiReceiversWithAmount = async () => {
                         </div>
                     </div>
                 </div>
-            )}        
+            )}
+      {showPopupSendSuccess && (
+                <div className="popup">
+                    <div className="popup-content">
+                        <h2>Success</h2>
+                        <p> Your multi-send request has been successfully executed with the transaction hash={transactionHash}
+                        </p>
+                        <div className="button-container">                            
+                            <button onClick={copyHashToClipboard}>{copyTransactionHash ? "Copied!" : "Copy tx-hash"}</button>
+                            <button onClick={removePopupSendSuccess}>Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}       
     </div>
   );
 }

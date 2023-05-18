@@ -43,10 +43,7 @@ function CreateToken(props) {
     setShowDeployedToken(false);
   };
 
-  const handleAddToken = async () => {
-    console.log(deployedTokenAddress);
-    console.log(symbolToken);
-    console.log(18);
+  const handleAddToken = async () => {    
     await addTokenToMetamask(deployedTokenAddress, symbolToken.toUpperCase(), 18);
   };
 

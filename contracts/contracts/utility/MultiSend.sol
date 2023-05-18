@@ -16,25 +16,17 @@ contract MultiSend {
         uint256[] memory amounts
     ) public {
         require(to.length == amounts.length, "Invalid input lengths");
-        require(token.balanceOf(msg.sender) >= getTotalAmount(amounts), "Insufficient balance");
-        uint256 currentAllowance = token.allowance(msg.sender, address(this));
-        uint256 totalSpentAmount = getTotalAmount(amounts);
-        if(currentAllowance < totalSpentAmount) {
-            require(token.approve(address(this), (totalSpentAmount - currentAllowance)), "Approve failed");
-        }        
+        require(token.balanceOf(msg.sender) >= getTotalAmount(amounts), "Insufficient balance");        
         for (uint256 i = 0; i < to.length; i++) {
+            require(msg.sender != to[i], "Cannot send to yourself");
             require(token.transferFrom(msg.sender, to[i], amounts[i]), "Transfer failed");
         }
     }
 
     function multiSendFixedAmount(IERC20 token, address[] memory to, uint256 amount) public {
-        require(token.balanceOf(msg.sender) >= amount * (to.length), "Insufficient balance");
-        uint256 currentAllowance = token.allowance(msg.sender, address(this));
-        uint256 totalSpentAmount = amount * (to.length);
-        if(currentAllowance < totalSpentAmount) {
-            require(token.approve(address(this), (totalSpentAmount - currentAllowance)), "Approve failed");
-        }        
+        require(token.balanceOf(msg.sender) >= amount * (to.length), "Insufficient balance");              
         for (uint256 i = 0; i < to.length; i++) {
+            require(msg.sender != to[i], "Cannot send to yourself");
             require(token.transferFrom(msg.sender, to[i], amount), "Transfer failed");
         }
     }
